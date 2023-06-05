@@ -1,6 +1,8 @@
 import { useForm, FormProvider } from "react-hook-form";
 import PostTitleValidationErrors from "./PostTitleValidationErrors";
 import TextInputWrapper from "./TextInputWrapper";
+import { ControlledSelect } from "./ControlledSelect";
+import { DevTool } from "@hookform/devtools";
 
 interface FormData {
   title: string;
@@ -17,10 +19,11 @@ const PostForm: React.FC = () => {
     defaultValues: defaultData,
   });
 
-  const { register, handleSubmit, reset, watch, setFocus, setError } =
+  const { register, handleSubmit, reset, watch, setFocus, setError, control } =
     formMethods;
 
   const onFormSubmit = async (data: FormData) => {
+    console.log("form async data", data, formMethods.formState);
     try {
       await fetch("https://jsonplaceholder.typicode.com/posts", {
         method: "POST",
@@ -38,16 +41,27 @@ const PostForm: React.FC = () => {
   const body = watch("body");
 
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        width: "70%",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <FormProvider {...formMethods}>
         <form onSubmit={handleSubmit(onFormSubmit)}>
           <div>
             <TextInputWrapper />
-
+            <ControlledSelect
+              name="option"
+              rules={{ required: true }}
+              defaultValue={"option1"}
+            />
             <PostTitleValidationErrors />
           </div>
-          <div>
-            <input type="text" placeholder="body" {...register("body")} />
+          <div style={{ flex: "1" }}>
+            <textarea placeholder="body" {...register("body")} />
           </div>
 
           <div>
@@ -66,7 +80,9 @@ const PostForm: React.FC = () => {
           <p onClick={() => setFocus("body")}>{body}</p>
         </div>
       )}
-    </>
+
+      <DevTool control={control} />
+    </div>
   );
 };
 

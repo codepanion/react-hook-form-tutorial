@@ -1,18 +1,22 @@
 import { useFormContext } from "react-hook-form";
 
+const name = "title";
 const TextInput: React.FC = () => {
   const { register } = useFormContext();
 
   return (
-    <input
-      type="text"
-      placeholder="title"
-      {...register("title", {
-        required: true,
-        maxLength: 10,
-        pattern: /[A-Za-z]/,
-      })}
-    />
+    <>
+      <label> {name}</label>
+      <input
+        type="text"
+        placeholder="title"
+        {...register("title", {
+          required: true,
+          maxLength: 10,
+          pattern: /[A-Za-z]/,
+        })}
+      />
+    </>
   );
 };
 
